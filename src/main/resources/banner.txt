@@ -1,0 +1,10 @@
+${AnsiColor.RED}
+ ,----.     ,---. ,--------.,------.,--.   ,--.  ,---.,--.   ,--.  ,---. ,------.,------.,--.   ,--.,------.,------.
+'  .-./    /  O  \'--.  .--'|  .---'|  |   |  | /  O  \\  `.'  /  '   .-'|  .---'|  .--. '\  `.'  / |  .---'|  .--. '
+|  | .---.|  .-.  |  |  |   |  `--, |  |.'.|  ||  .-.  |'.    /   `.  `-.|  `--, |  '--'.' \     /  |  `--, |  '--'.'
+'  '--'  ||  | |  |  |  |   |  `---.|   ,'.   ||  | |  |  |  |    .-'    |  `---.|  |\  \   \   /   |  `---.|  |\  \
+ `------' `--' `--'  `--'   `------''--'   '--'`--' `--'  `--'    `-----'`------'`--' '--'   `-'    `------'`--' '--'
+
+${AnsiColor.BRIGHT_GREEN}Application Name and Version -${AnsiColor.BRIGHT_CYAN} ${spring.application.name} (${spring.application.version})
+${AnsiColor.MAGENTA}Powered by - HASIB (${AnsiColor.BLUE}Spring Boot ${spring-boot.version})
+------------------------------ Spring Boot Application Start --------------------------------
