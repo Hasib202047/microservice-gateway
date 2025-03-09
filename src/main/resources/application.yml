@@ -12,7 +12,6 @@ eureka:
 server:
   port: 8082
 
-
 spring:
   banner:
     charset: UTF-8
@@ -24,13 +23,17 @@ spring:
     web-application-type: reactive
   cloud:
     gateway:
-      routes:
-          - id: auth_service
-            uri: http://localhost:8083
-            predicates:
-              - Path=/user/**
-            filters:
-              - RewritePath=/user/(?<segment>.*), /${segment}
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+#      routes:
+#          - id: auth_service
+#            uri: http://localhost:8083
+#            predicates:
+#              - Path=/user/**
+#            filters:
+#              - RewritePath=/user/(?<segment>.*), /${segment}
 #          - id: order_service
 #            uri: http://localhost:8082 # Order microservice
 #            predicates:

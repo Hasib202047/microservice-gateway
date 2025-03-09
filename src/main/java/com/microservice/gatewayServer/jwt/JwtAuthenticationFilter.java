@@ -1,6 +1,8 @@
 package com.microservice.gatewayServer.jwt;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.lang.NonNull;
@@ -14,6 +16,7 @@ import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE) // Ensures the filter runs at the right priority
 public class JwtAuthenticationFilter implements WebFilter {
     private final JwtUtil jwtUtil;
     private Mono<Void> getVoidMono(ServerWebExchange exchange) {
@@ -34,17 +37,21 @@ public class JwtAuthenticationFilter implements WebFilter {
         String url = exchange.getRequest().getURI().getPath();
         System.out.println("url: " + url);
         if(url.contains("/auth/")) {
-            return chain.filter(exchange).then(Mono.fromRunnable(() -> System.out.println("Last Post Global Filter")));
+            return chain.filter(exchange).then(Mono.fromRunnable(() -> System.out.println("Url with Auth: " + url)));
         }
         String authorizationHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
         String jwt;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            if(jwtUtil.validateToken(jwt))
-            {
-                return chain.filter(exchange).then(Mono.fromRunnable(() -> System.out.println("Last Post Global Filter")));
-            }else {
+            try {
+                if(jwtUtil.validateToken(jwt))
+                {
+                    return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+                        System.out.println("Url without Auth: " + url);
+                    }));
+                }
+            } catch (Exception e) {
                 return getVoidMono(exchange);
             }
         }

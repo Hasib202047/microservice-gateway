@@ -19,10 +19,6 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable) // Disable CSRF for stateless API
-//                .authorizeExchange(exchanges -> exchanges
-//                        .pathMatchers("/auth/**").permitAll() // Public endpoints
-//                        .anyExchange().authenticated()        // All others require authentication
-//                )
                 .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION) // Add custom filter
                 .build();
     }
