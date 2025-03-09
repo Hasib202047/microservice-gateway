@@ -1,18 +1,9 @@
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8081/eureka
-    register-with-eureka: true
-    fetch-registry: true
-    refresh:
-      enable: true
-  instance:
-    prefer-ip-address: true
-    lease-renewal-interval-in-seconds: 30
 server:
   port: 8082
 
 spring:
+  profiles:
+    active: staging
   banner:
     charset: UTF-8
     location: banner.txt

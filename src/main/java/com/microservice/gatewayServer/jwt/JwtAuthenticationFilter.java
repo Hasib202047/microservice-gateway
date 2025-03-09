@@ -1,8 +1,5 @@
 package com.microservice.gatewayServer.jwt;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.lang.NonNull;
@@ -15,10 +12,13 @@ import reactor.core.publisher.Mono;
 import java.util.Date;
 
 @Component
-@RequiredArgsConstructor
-@Order(Ordered.HIGHEST_PRECEDENCE) // Ensures the filter runs at the right priority
 public class JwtAuthenticationFilter implements WebFilter {
     private final JwtUtil jwtUtil;
+
+    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
     private Mono<Void> getVoidMono(ServerWebExchange exchange) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
@@ -47,9 +47,7 @@ public class JwtAuthenticationFilter implements WebFilter {
             try {
                 if(jwtUtil.validateToken(jwt))
                 {
-                    return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-                        System.out.println("Url without Auth: " + url);
-                    }));
+                    return chain.filter(exchange).then(Mono.fromRunnable(() -> System.out.println("Url without Auth: " + url)));
                 }
             } catch (Exception e) {
                 return getVoidMono(exchange);
