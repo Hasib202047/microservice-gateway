@@ -14,9 +14,11 @@ import java.util.Date;
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
     private final JwtUtil jwtUtil;
+    private final TokenBlacklistService tokenBlacklistService;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, TokenBlacklistService tokenBlacklistService) {
         this.jwtUtil = jwtUtil;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     private Mono<Void> getVoidMono(ServerWebExchange exchange) {
@@ -45,7 +47,7 @@ public class JwtAuthenticationFilter implements WebFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             try {
-                if(jwtUtil.validateToken(jwt))
+                if(!tokenBlacklistService.isTokenBlacklisted(jwt) && jwtUtil.validateToken(jwt))
                 {
                     return chain.filter(exchange).then(Mono.fromRunnable(() -> System.out.println("Url without Auth: " + url)));
                 }
