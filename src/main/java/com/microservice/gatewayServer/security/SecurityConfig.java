@@ -19,6 +19,12 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable) // Disable CSRF for stateless API
+                .authorizeExchange(exchange -> exchange
+                        .pathMatchers("/auth/**").permitAll()
+                        .pathMatchers("/admin/**").hasRole("ADMIN")
+                        .pathMatchers("/user/**").hasRole("USER")
+                        .anyExchange().authenticated()
+                )
                 .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION) // Add custom filter
                 .build();
     }

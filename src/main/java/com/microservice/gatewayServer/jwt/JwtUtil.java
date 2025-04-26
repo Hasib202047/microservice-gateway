@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 
 @Component
@@ -43,8 +44,24 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
     // Validate token
     public Boolean validateToken(String token) {
         return !isTokenExpired(token);
+    }
+    public List<String> extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        // Assuming roles are stored as a list in the "roles" claim
+        Object rolesObject = claims.get("roles");
+
+        if (rolesObject instanceof List<?> rolesList) { // Java 16+ syntax (pattern matching)
+            return rolesList.stream()
+                    .map(Object::toString) // Convert each role safely to String
+                    .toList();
+        }
+
+        return List.of(); // Return empty list if no roles found
     }
 }
