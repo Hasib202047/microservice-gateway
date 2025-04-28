@@ -9,3 +9,9 @@ eureka:
   instance:
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 30
+
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
